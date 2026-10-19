@@ -1,4 +1,5 @@
 import scipy as sp
+from PIL import Image
 
 # Considering a set of m images
 # Convert each image into 1D vectors
@@ -18,3 +19,7 @@ import scipy as sp
 # We represent each normalized face vector as a linear combination of the best k eigenvectors
 #   x_i - y = the sum from j = 1 to k of w_j * u_j, where w_j is the coefficient and u_j are our eigenfaces
 # Represent the training faces in the form of a vector of the coefficients
+
+
+
+
