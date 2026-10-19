@@ -5,19 +5,6 @@ from pathlib import Path
 from functools import reduce
 
 
-# Find the covariance matrix (how all the vectors change together)
-#   A * A_transpose -> N^2 x N^2 is not computationally efficient
-#   A_transpose * A -> M x M (assuming M < N^2)
-#   Cov = A_transpose * A
-# Find the eigenvectors of the covariance matrix
-#   C' * u_i = lambda_i * u_i
-#   Where C' = A * A_transpose and u_i = A * v_i
-# Select the k largest eigenvectors of C'where k < M
-# We represent each normalized face vector as a linear combination of the best k eigenvectors
-#   x_i - y = the sum from j = 1 to k of w_j * u_j, where w_j is the coefficient and u_j are our eigenfaces
-# Represent the training faces in the form of a vector of the coefficients
-
-
 # Considering a set of m images
 # Convert each image into 1D vectors
 
@@ -42,13 +29,23 @@ for img_path in training_folder.glob("*"):
 # Create a matrix of all the new vectors, A
 
 # Finding the average vector
-vec_sum = reduce(lambda x, y: x + y, image_vectors)
-vec_average = (vec_sum)/(len(image_vectors))
 
-A = np.array(image_vectors) - vec_average
+# Converting list of 1D image vectors to 2D matrix of m images x n pixels
+image_matrix = np.array(image_vectors)
+vec_average = np.mean(image_matrix, axis=0)
+
+A = image_matrix - vec_average
 covariance = np.dot(A, A.T)
 
+# Finding the eigenvalues & eigenvectors of the covariance matrix
+e_vals, e_vecs = np.linalg.eigh(covariance)
+idx = np.argsort(e_vals)[::-1]
 
+# Creating a matrix of eigenvalues in descending order
+e_vals = e_vals[idx]
+e_vecs = e_vecs[idx]
 
+# Creating the eigenfaces => matrix of the transpose of centered faces * their eigenvectors
+eigenfaces = np.dot(A.T, e_vecs)
 
 
