@@ -3,8 +3,6 @@ import numpy as np
 from PIL import Image
 from pathlib import Path
 
-# Considering a set of m images
-# Convert each image into 1D vectors
 # Find the average of all the face vectors:
 #   y = 1/m * the sum from i = 1 to m of x_i
 # Subtract the mean from each vector
@@ -23,7 +21,8 @@ from pathlib import Path
 # Represent the training faces in the form of a vector of the coefficients
 
 
-# Loading our training images
+# Considering a set of m images
+# Convert each image into 1D vectors
 
 training_paths = [] # List of paths to each training image
 image_vectors = [] # List of training image vectors
@@ -38,4 +37,15 @@ for img_path in training_folder.glob("*"):
         img_vec = np.array(Image.open(img_path)).flatten().astype(np.float64) # flattening to 1D
         image_vectors.append(img_vec)
         training_paths.append(img_path)
+
+
+# Finding the average vector
+for vec in image_vectors:
+    vec_sum += vec
+
+vec_average = (1/(len(image_vectors))) * (vec_sum)
+
+norm_arr = []
+for vec in image_vectors:
+    norm_arr.append(vec - vec_average)
 
