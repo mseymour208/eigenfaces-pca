@@ -27,10 +27,10 @@ from pathlib import Path
 
 training_paths = [] # List of paths to each training image
 image_vectors = [] # List of training image vectors
-training_folder = Path() # Path to folder of training images
+training_folder = Path('C:\\Users\\Mikle\\OneDrive\\Desktop\\eigenfaces-pca\\TrainingImages') # Path to folder of training images
 
 # Populate image_vectors with vectors for each training image
-for img_path in training_folder.glob('*.jpg'):
+for img_path in training_folder.glob("*"):
     with Image.open(img_path) as img:
         img = img.convert('L') # Convert to greyscale
         img = img.resize((200, 200))
@@ -38,3 +38,4 @@ for img_path in training_folder.glob('*.jpg'):
         img_vec = np.array(Image.open(img_path)).flatten().astype(np.float64) # flattening to 1D
         image_vectors.append(img_vec)
         training_paths.append(img_path)
+
