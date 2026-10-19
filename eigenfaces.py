@@ -31,21 +31,25 @@ training_folder = Path('C:\\Users\\Mikle\\OneDrive\\Desktop\\eigenfaces-pca\\Tra
 # Populate image_vectors with vectors for each training image
 for img_path in training_folder.glob("*"):
     with Image.open(img_path) as img:
-        img = img.convert('L') # Convert to greyscale
-        img = img.resize((200, 200))
+        img = img.convert('L').resize((200, 200)) # Convert to greyscale
 
         img_vec = np.array(Image.open(img_path)).flatten().astype(np.float64) # flattening to 1D
         image_vectors.append(img_vec)
         training_paths.append(img_path)
 
+        print(img_path, img_vec.shape)
+
+
 
 # Finding the average vector
+vec_sum = np.empty(27433728)
 for vec in image_vectors:
     vec_sum += vec
 
-vec_average = (1/(len(image_vectors))) * (vec_sum)
+vec_average = (vec_sum)/(len(image_vectors))
 
 norm_arr = []
 for vec in image_vectors:
     norm_arr.append(vec - vec_average)
+
 
