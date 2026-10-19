@@ -2,12 +2,9 @@ import scipy as sp
 import numpy as np
 from PIL import Image
 from pathlib import Path
+from functools import reduce
 
-# Find the average of all the face vectors:
-#   y = 1/m * the sum from i = 1 to m of x_i
-# Subtract the mean from each vector
-#   a_i = x_i - y
-# Create a matrix of all the new vectors, A
+
 # Find the covariance matrix (how all the vectors change together)
 #   A * A_transpose -> N^2 x N^2 is not computationally efficient
 #   A_transpose * A -> M x M (assuming M < N^2)
@@ -37,19 +34,21 @@ for img_path in training_folder.glob("*"):
         image_vectors.append(img_vec)
         training_paths.append(img_path)
 
-        print(img_path, img_vec.shape)
 
-
+# Find the average of all the face vectors:
+#   y = 1/m * the sum from i = 1 to m of x_i
+# Subtract the mean from each vector
+#   a_i = x_i - y
+# Create a matrix of all the new vectors, A
 
 # Finding the average vector
-vec_sum = np.empty(27433728)
-for vec in image_vectors:
-    vec_sum += vec
-
+vec_sum = reduce(lambda x, y: x + y, image_vectors)
 vec_average = (vec_sum)/(len(image_vectors))
 
-norm_arr = []
-for vec in image_vectors:
-    norm_arr.append(vec - vec_average)
+A = np.array(image_vectors) - vec_average
+covariance = np.dot(A, A.T)
+
+
+
 
 
